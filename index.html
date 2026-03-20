@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Hind Siliguri', sans-serif;
       background: #0d1117;
@@ -17,11 +18,17 @@
       align-items: center;
       justify-content: center;
     }
-    .wrap { text-align: center; animation: fadeIn 0.4s ease both; }
+
+    .wrap {
+      text-align: center;
+      animation: fadeIn 0.4s ease both;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* Spinning ring */
     .ring {
       width: 80px; height: 80px;
       border-radius: 50%;
@@ -31,15 +38,32 @@
       margin: 0 auto 28px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; color: #fff; }
-    p  { color: #8b949e; font-size: 0.95rem; margin-bottom: 28px; }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    p {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    /* Progress bar */
     .bar-track {
-      width: 220px; height: 4px;
-      background: #1e2a35; border-radius: 100px;
-      overflow: hidden; margin: 0 auto;
+      width: 220px;
+      height: 4px;
+      background: #1e2a35;
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 0 auto;
     }
     .bar-fill {
-      height: 100%; width: 0%;
+      height: 100%;
+      width: 0%;
       background: linear-gradient(90deg, #229ED9, #29d9c2);
       border-radius: 100px;
       animation: fill 2s linear forwards;
@@ -60,24 +84,20 @@
 <script>
   var NEW_BOT = 'https://t.me/zomato_platform_bot';
 
-  setTimeout(function () {
+  function doRedirect() {
     var tg = window.Telegram && window.Telegram.WebApp;
-
-    if (tg) {
-      // Telegram WebApp এর ভেতরে — Telegram নিজের method দিয়ে bot open করো
+    if (tg && tg.openTelegramLink) {
+      tg.ready();
       tg.openTelegramLink(NEW_BOT);
-
-      // তারপর এই WebApp window বন্ধ করো
-      setTimeout(function () {
-        tg.close();
-      }, 500);
-
+      setTimeout(function () { tg.close(); }, 800);
     } else {
-      // Normal browser হলে সরাসরি redirect
       window.location.replace(NEW_BOT);
     }
+  }
 
-  }, 2000);
+  window.addEventListener('load', function () {
+    setTimeout(doRedirect, 2000);
+  });
 </script>
 </body>
 </html>
