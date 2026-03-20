@@ -3,102 +3,52 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Redirecting...</title>
+  <title>Debug</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Hind Siliguri', sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .wrap {
-      text-align: center;
-      animation: fadeIn 0.4s ease both;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Spinning ring */
-    .ring {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      border: 5px solid #1e2a35;
-      border-top-color: #229ED9;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 28px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-
-    p {
-      color: #8b949e;
-      font-size: 0.95rem;
-      margin-bottom: 28px;
-    }
-
-    /* Progress bar */
-    .bar-track {
-      width: 220px;
-      height: 4px;
-      background: #1e2a35;
-      border-radius: 100px;
-      overflow: hidden;
-      margin: 0 auto;
-    }
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #229ED9, #29d9c2);
-      border-radius: 100px;
-      animation: fill 2s linear forwards;
-    }
-    @keyframes fill { to { width: 100%; } }
+    body { font-family: sans-serif; background: #0d1117; color: #fff; padding: 20px; }
+    .info { background: #1e2a35; border-radius: 10px; padding: 16px; margin-bottom: 12px; font-size: 14px; word-break: break-all; }
+    button { background: #229ED9; color: white; border: none; padding: 14px 24px; border-radius: 10px; font-size: 16px; width: 100%; margin-bottom: 10px; cursor: pointer; }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="ring"></div>
-  <h1>নতুন জায়গায় নিয়ে যাচ্ছি...</h1>
-  <p>একটু অপেক্ষা করুন</p>
-  <div class="bar-track">
-    <div class="bar-fill"></div>
-  </div>
-</div>
+  <div class="info" id="info">Loading...</div>
+  <button onclick="tryOpenLink()">openTelegramLink</button>
+  <button onclick="tryOpenLink2()">openLink</button>
+  <button onclick="tryClose()">close()</button>
+  <div class="info" id="log"></div>
 
 <script>
-  var NEW_BOT = 'https://t.me/zomato_platform_bot';
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var info = document.getElementById('info');
+  var log = document.getElementById('log');
 
-  function doRedirect() {
-    var tg = window.Telegram && window.Telegram.WebApp;
-    if (tg) {
-      tg.ready();
-      // bot-এর chat-এ নিয়ে যাও (mini app open করবে না)
+  info.innerHTML = 
+    'tg exists: ' + !!tg + '<br>' +
+    'platform: ' + (tg ? tg.platform : 'N/A') + '<br>' +
+    'version: ' + (tg ? tg.version : 'N/A') + '<br>' +
+    'initData: ' + (tg ? (tg.initData ? 'YES' : 'EMPTY') : 'N/A');
+
+  function tryOpenLink() {
+    log.innerHTML = 'trying openTelegramLink...';
+    try {
       tg.openTelegramLink('https://t.me/zomato_platform_bot');
-      setTimeout(function () { tg.close(); }, 500);
-    } else {
-      window.location.replace(NEW_BOT);
-    }
+      log.innerHTML += ' OK';
+    } catch(e) { log.innerHTML += ' ERROR: ' + e.message; }
   }
 
-  window.addEventListener('load', function () {
-    setTimeout(doRedirect, 2000);
-  });
+  function tryOpenLink2() {
+    log.innerHTML = 'trying openLink...';
+    try {
+      tg.openLink('https://t.me/zomato_platform_bot');
+      log.innerHTML += ' OK';
+    } catch(e) { log.innerHTML += ' ERROR: ' + e.message; }
+  }
+
+  function tryClose() {
+    log.innerHTML = 'trying close...';
+    try { tg.close(); } catch(e) { log.innerHTML += ' ERROR: ' + e.message; }
+  }
 </script>
 </body>
 </html>
