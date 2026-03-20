@@ -86,10 +86,11 @@
 
   function doRedirect() {
     var tg = window.Telegram && window.Telegram.WebApp;
-    if (tg && tg.openTelegramLink) {
+    if (tg) {
       tg.ready();
-      tg.openTelegramLink(NEW_BOT);
-      setTimeout(function () { tg.close(); }, 800);
+      // bot-এর chat-এ নিয়ে যাও (mini app open করবে না)
+      tg.openTelegramLink('https://t.me/zomato_platform_bot');
+      setTimeout(function () { tg.close(); }, 500);
     } else {
       window.location.replace(NEW_BOT);
     }
